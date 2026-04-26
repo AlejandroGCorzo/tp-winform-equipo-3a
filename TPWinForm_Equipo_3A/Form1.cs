@@ -19,9 +19,16 @@ namespace TPWinForm_Equipo_3A
             btnAgregar.Click += btnAgregar_Click;
             btnModificar.Click += btnModificar_Click;
             btnEliminar.Click += btnEliminar_Click;
+            btnCatalogos.Click += btnCatalogos_Click;
+
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
 
             Cargar();
+        }
+
+        private void btnCatalogos_Click(object sender, EventArgs e)
+        {
+            new FormCatalogos().ShowDialog();
         }
 
         private void Cargar()
@@ -50,10 +57,10 @@ namespace TPWinForm_Equipo_3A
         {
             if (dataGridView1.CurrentRow == null) return;
 
-            Articulo seleccionado =
+            Articulo art =
                 (Articulo)dataGridView1.CurrentRow.DataBoundItem;
 
-            new FormAltaArticulo(seleccionado).ShowDialog();
+            new FormAltaArticulo(art).ShowDialog();
             Cargar();
         }
 
@@ -61,19 +68,16 @@ namespace TPWinForm_Equipo_3A
         {
             if (dataGridView1.CurrentRow == null) return;
 
-            Articulo seleccionado =
+            Articulo art =
                 (Articulo)dataGridView1.CurrentRow.DataBoundItem;
 
-            DialogResult r = MessageBox.Show(
+            if (MessageBox.Show(
                 "¿Eliminar artículo?",
                 "Eliminar",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
-
-            if (r == DialogResult.Yes)
+                MessageBoxButtons.YesNo)
+                == DialogResult.Yes)
             {
-                ArticuloNegocio negocio = new ArticuloNegocio();
-                negocio.Eliminar(seleccionado.Id);
+                new ArticuloNegocio().Eliminar(art.Id);
                 Cargar();
             }
         }
@@ -82,17 +86,17 @@ namespace TPWinForm_Equipo_3A
         {
             if (dataGridView1.CurrentRow == null) return;
 
-            Articulo seleccionado =
+            Articulo art =
                 (Articulo)dataGridView1.CurrentRow.DataBoundItem;
 
-            new FormDetalleArticulo(seleccionado).ShowDialog();
+            new FormDetalleArticulo(art).ShowDialog();
         }
 
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
             string filtro = txtBuscar.Text.ToLower();
 
-            var listaFiltrada = listaArticulos
+            var lista = listaArticulos
                 .Where(x =>
                     x.Nombre.ToLower().Contains(filtro) ||
                     x.Codigo.ToLower().Contains(filtro) ||
@@ -100,7 +104,7 @@ namespace TPWinForm_Equipo_3A
                 .ToList();
 
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = listaFiltrada;
+            dataGridView1.DataSource = lista;
 
             dataGridView1.Columns["Id"].Visible = false;
             dataGridView1.Columns["ImagenUrl"].Visible = false;
@@ -108,23 +112,18 @@ namespace TPWinForm_Equipo_3A
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.CurrentRow != null)
-            {
-                Articulo seleccionado =
-                    (Articulo)dataGridView1.CurrentRow.DataBoundItem;
+            if (dataGridView1.CurrentRow == null) return;
 
-                CargarImagen(seleccionado.ImagenUrl);
-            }
+            Articulo art =
+                (Articulo)dataGridView1.CurrentRow.DataBoundItem;
+
+            CargarImagen(art.ImagenUrl);
         }
 
-        private void CargarImagen(string imagen)
+        private void CargarImagen(string url)
         {
-            try { pbxArticulo.Load(imagen); }
+            try { pbxArticulo.Load(url); }
             catch { pbxArticulo.Image = null; }
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
         }
     }
 }

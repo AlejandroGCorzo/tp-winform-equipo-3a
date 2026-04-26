@@ -4,6 +4,14 @@
     {
         private System.ComponentModel.IContainer components = null;
 
+        private DataGridView dataGridView1;
+        private TextBox txtBuscar;
+        private Button btnAgregar;
+        private Button btnModificar;
+        private Button btnEliminar;
+        private Button btnCatalogos;
+        private PictureBox pbxArticulo;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -12,8 +20,6 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         private void InitializeComponent()
         {
             dataGridView1 = new DataGridView();
@@ -21,6 +27,7 @@
             btnAgregar = new Button();
             btnModificar = new Button();
             btnEliminar = new Button();
+            btnCatalogos = new Button();
             pbxArticulo = new PictureBox();
 
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -28,26 +35,29 @@
             SuspendLayout();
 
             txtBuscar.Location = new Point(12, 12);
-            txtBuscar.Size = new Size(280, 23);
+            txtBuscar.Size = new Size(260, 23);
 
-            btnAgregar.Location = new Point(310, 10);
+            btnAgregar.Location = new Point(290, 10);
             btnAgregar.Size = new Size(90, 27);
             btnAgregar.Text = "Agregar";
 
-            btnModificar.Location = new Point(410, 10);
+            btnModificar.Location = new Point(390, 10);
             btnModificar.Size = new Size(90, 27);
             btnModificar.Text = "Modificar";
 
-            btnEliminar.Location = new Point(510, 10);
+            btnEliminar.Location = new Point(490, 10);
             btnEliminar.Size = new Size(90, 27);
             btnEliminar.Text = "Eliminar";
+
+            btnCatalogos.Location = new Point(590, 10);
+            btnCatalogos.Size = new Size(110, 27);
+            btnCatalogos.Text = "Catálogos";
 
             dataGridView1.Location = new Point(12, 50);
             dataGridView1.Size = new Size(700, 500);
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
             dataGridView1.ReadOnly = true;
-            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
 
             pbxArticulo.Location = new Point(730, 50);
@@ -62,6 +72,7 @@
             Controls.Add(btnAgregar);
             Controls.Add(btnModificar);
             Controls.Add(btnEliminar);
+            Controls.Add(btnCatalogos);
             Controls.Add(pbxArticulo);
 
             Text = "Gestión de Artículos";
@@ -71,14 +82,5 @@
             ResumeLayout(false);
             PerformLayout();
         }
-
-        #endregion
-
-        private DataGridView dataGridView1;
-        private TextBox txtBuscar;
-        private Button btnAgregar;
-        private Button btnModificar;
-        private Button btnEliminar;
-        private PictureBox pbxArticulo;
     }
 }

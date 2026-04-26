@@ -31,27 +31,26 @@ namespace TPWinForm_Equipo_3A
             txtPrecio.Text = articulo.Precio.ToString();
             txtImagen.Text = articulo.ImagenUrl;
 
-            cboMarca.SelectedItem = articulo.Marca.Nombre;
-            cboCategoria.SelectedItem = articulo.Categoria.Nombre;
+            cboMarca.Text = articulo.Marca.Nombre;
+            cboCategoria.Text = articulo.Categoria.Nombre;
 
-            imagenes.Add(articulo.ImagenUrl);
-            lstImagenes.DataSource = imagenes;
+            if (!string.IsNullOrEmpty(articulo.ImagenUrl))
+            {
+                imagenes.Add(articulo.ImagenUrl);
+                lstImagenes.DataSource = null;
+                lstImagenes.DataSource = imagenes;
+            }
         }
 
         private void CargarCombos()
         {
-            cboMarca.Items.Add("Samsung");
-            cboMarca.Items.Add("Apple");
-            cboMarca.Items.Add("Xiaomi");
-            cboMarca.Items.Add("Nike");
-            cboMarca.Items.Add("Adidas");
-            cboMarca.Items.Add("Puma");
+            CatalogoNegocio negocio = new CatalogoNegocio();
 
-            cboCategoria.Items.Add("Celulares");
-            cboCategoria.Items.Add("Calzado");
+            cboMarca.DataSource = null;
+            cboMarca.DataSource = negocio.ListarMarcas();
 
-            cboMarca.SelectedIndex = 0;
-            cboCategoria.SelectedIndex = 0;
+            cboCategoria.DataSource = null;
+            cboCategoria.DataSource = negocio.ListarCategorias();
         }
 
         private void btnAgregarImagen_Click(object? sender, EventArgs e)
@@ -89,7 +88,8 @@ namespace TPWinForm_Equipo_3A
                     decimal.Parse(txtPrecio.Text),
                     cboMarca.Text,
                     cboCategoria.Text,
-                    imagenes);
+                    imagenes
+                );
             }
             else
             {
@@ -101,7 +101,8 @@ namespace TPWinForm_Equipo_3A
                     decimal.Parse(txtPrecio.Text),
                     cboMarca.Text,
                     cboCategoria.Text,
-                    imagenes);
+                    imagenes
+                );
             }
 
             Close();
