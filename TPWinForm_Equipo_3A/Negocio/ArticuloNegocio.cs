@@ -185,5 +185,33 @@ namespace TPWinForm_Equipo_3A.Negocio
                 datos.CerrarConexion();
             }
         }
+
+        public List<string> ListarImagenes(int idArticulo)
+        {
+            List<string> lista = new List<string>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+            SELECT UrlImagen
+            FROM ImagenesArticulo
+            WHERE IdArticulo = @id");
+
+                datos.SetearParametro("@id", idArticulo);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    lista.Add((string)datos.Lector["UrlImagen"]);
+                }
+
+                return lista;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
     }
 }
