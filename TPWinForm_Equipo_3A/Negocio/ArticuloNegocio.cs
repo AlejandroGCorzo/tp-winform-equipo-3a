@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TPWinForm_Equipo_3A.Dominio;
 
 namespace TPWinForm_Equipo_3A.Negocio
@@ -78,8 +79,8 @@ namespace TPWinForm_Equipo_3A.Negocio
                             @codigo,
                             @nombre,
                             @descripcion,
-                            (SELECT Id FROM Marcas WHERE Nombre = @marca),
-                            (SELECT Id FROM Categorias WHERE Nombre = @categoria),
+                            (SELECT Id FROM Marcas WHERE Nombre=@marca),
+                            (SELECT Id FROM Categorias WHERE Nombre=@categoria),
                             @precio
                         )
                 ");
@@ -106,6 +107,75 @@ namespace TPWinForm_Equipo_3A.Negocio
                     ");
 
                     img.SetearParametro("@url", url);
+                    img.EjecutarAccion();
+                    img.CerrarConexion();
+                }
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void Modificar(
+            int id,
+            string codigo,
+            string nombre,
+            string descripcion,
+            decimal precio,
+            string marca,
+            string categoria,
+            List<string> imagenes)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+                    UPDATE Articulos
+                    SET
+                        Codigo = @codigo,
+                        Nombre = @nombre,
+                        Descripcion = @descripcion,
+                        IdMarca = (SELECT Id FROM Marcas WHERE Nombre=@marca),
+                        IdCategoria = (SELECT Id FROM Categorias WHERE Nombre=@categoria),
+                        Precio = @precio
+                    WHERE Id = @id
+                ");
+
+                datos.SetearParametro("@codigo", codigo);
+                datos.SetearParametro("@nombre", nombre);
+                datos.SetearParametro("@descripcion", descripcion);
+                datos.SetearParametro("@marca", marca);
+                datos.SetearParametro("@categoria", categoria);
+                datos.SetearParametro("@precio", precio);
+                datos.SetearParametro("@id", id);
+
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                AccesoDatos borrar = new AccesoDatos();
+
+                borrar.SetearConsulta(
+                    "DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
+
+                borrar.SetearParametro("@id", id);
+                borrar.EjecutarAccion();
+                borrar.CerrarConexion();
+
+                foreach (string url in imagenes)
+                {
+                    AccesoDatos img = new AccesoDatos();
+
+                    img.SetearConsulta(@"
+                        INSERT INTO ImagenesArticulo
+                            (IdArticulo, UrlImagen)
+                        VALUES (@id, @url)
+                    ");
+
+                    img.SetearParametro("@id", id);
+                    img.SetearParametro("@url", url);
+
                     img.EjecutarAccion();
                     img.CerrarConexion();
                 }

@@ -17,6 +17,7 @@ namespace TPWinForm_Equipo_3A
 
             txtBuscar.TextChanged += txtBuscar_TextChanged;
             btnAgregar.Click += btnAgregar_Click;
+            btnModificar.Click += btnModificar_Click;
 
             Cargar();
         }
@@ -39,8 +40,22 @@ namespace TPWinForm_Equipo_3A
 
         private void btnAgregar_Click(object? sender, EventArgs e)
         {
-            FormAltaArticulo ventana = new FormAltaArticulo();
-            ventana.ShowDialog();
+            FormAltaArticulo alta = new FormAltaArticulo();
+            alta.ShowDialog();
+            Cargar();
+        }
+
+        private void btnModificar_Click(object? sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null) return;
+
+            Articulo seleccionado =
+                (Articulo)dataGridView1.CurrentRow.DataBoundItem;
+
+            FormAltaArticulo modificar =
+                new FormAltaArticulo(seleccionado);
+
+            modificar.ShowDialog();
             Cargar();
         }
 
@@ -66,7 +81,9 @@ namespace TPWinForm_Equipo_3A
         {
             if (dataGridView1.CurrentRow != null)
             {
-                Articulo seleccionado = (Articulo)dataGridView1.CurrentRow.DataBoundItem;
+                Articulo seleccionado =
+                    (Articulo)dataGridView1.CurrentRow.DataBoundItem;
+
                 CargarImagen(seleccionado.ImagenUrl);
             }
         }
@@ -83,7 +100,9 @@ namespace TPWinForm_Equipo_3A
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView1_CellContentClick(
+            object sender,
+            DataGridViewCellEventArgs e)
         {
         }
     }
