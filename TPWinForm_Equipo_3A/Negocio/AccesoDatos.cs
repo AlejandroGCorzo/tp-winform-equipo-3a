@@ -7,12 +7,9 @@ namespace TPWinForm_Equipo_3A.Negocio
     {
         private SqlConnection conexion;
         private SqlCommand comando;
-        private SqlDataReader lector;
+        private SqlDataReader? lector;
 
-        public SqlDataReader Lector
-        {
-            get { return lector; }
-        }
+        public SqlDataReader? Lector => lector;
 
         public AccesoDatos()
         {
@@ -27,6 +24,7 @@ namespace TPWinForm_Equipo_3A.Negocio
         {
             comando.CommandType = CommandType.Text;
             comando.CommandText = consulta;
+            comando.Parameters.Clear();
         }
 
         public void EjecutarLectura()
@@ -50,10 +48,11 @@ namespace TPWinForm_Equipo_3A.Negocio
 
         public void CerrarConexion()
         {
-            if (lector != null)
+            if (lector != null && !lector.IsClosed)
                 lector.Close();
 
-            conexion.Close();
+            if (conexion.State == ConnectionState.Open)
+                conexion.Close();
         }
     }
 }
