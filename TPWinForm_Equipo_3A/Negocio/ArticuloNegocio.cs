@@ -31,17 +31,14 @@ namespace TPWinForm_Equipo_3A.Negocio
 
                 datos.EjecutarLectura();
 
-                while (datos.Lector != null && datos.Lector.Read())
+                while (datos.Lector.Read())
                 {
                     Articulo aux = new Articulo();
 
                     aux.Id = (int)datos.Lector["Id"];
                     aux.Codigo = (string)datos.Lector["Codigo"];
                     aux.Nombre = (string)datos.Lector["Nombre"];
-                    aux.Descripcion = datos.Lector["Descripcion"] is DBNull
-                        ? ""
-                        : (string)datos.Lector["Descripcion"];
-
+                    aux.Descripcion = datos.Lector["Descripcion"].ToString();
                     aux.Marca.Nombre = (string)datos.Lector["Marca"];
                     aux.Categoria.Nombre = (string)datos.Lector["Categoria"];
                     aux.Precio = (decimal)datos.Lector["Precio"];
@@ -58,14 +55,8 @@ namespace TPWinForm_Equipo_3A.Negocio
             }
         }
 
-        public void Agregar(
-            string codigo,
-            string nombre,
-            string descripcion,
-            decimal precio,
-            string marca,
-            string categoria,
-            List<string> imagenes)
+        public void Agregar(string codigo, string nombre, string descripcion,
+            decimal precio, string marca, string categoria, List<string> imagenes)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -73,17 +64,16 @@ namespace TPWinForm_Equipo_3A.Negocio
             {
                 datos.SetearConsulta(@"
                     INSERT INTO Articulos
-                        (Codigo, Nombre, Descripcion, IdMarca, IdCategoria, Precio)
+                    (Codigo,Nombre,Descripcion,IdMarca,IdCategoria,Precio)
                     VALUES
-                        (
-                            @codigo,
-                            @nombre,
-                            @descripcion,
-                            (SELECT Id FROM Marcas WHERE Nombre=@marca),
-                            (SELECT Id FROM Categorias WHERE Nombre=@categoria),
-                            @precio
-                        )
-                ");
+                    (
+                        @codigo,
+                        @nombre,
+                        @descripcion,
+                        (SELECT Id FROM Marcas WHERE Nombre=@marca),
+                        (SELECT Id FROM Categorias WHERE Nombre=@categoria),
+                        @precio
+                    )");
 
                 datos.SetearParametro("@codigo", codigo);
                 datos.SetearParametro("@nombre", nombre);
@@ -101,10 +91,8 @@ namespace TPWinForm_Equipo_3A.Negocio
 
                     img.SetearConsulta(@"
                         INSERT INTO ImagenesArticulo
-                            (IdArticulo, UrlImagen)
-                        VALUES
-                            ((SELECT MAX(Id) FROM Articulos), @url)
-                    ");
+                        (IdArticulo, UrlImagen)
+                        VALUES((SELECT MAX(Id) FROM Articulos), @url)");
 
                     img.SetearParametro("@url", url);
                     img.EjecutarAccion();
@@ -117,15 +105,9 @@ namespace TPWinForm_Equipo_3A.Negocio
             }
         }
 
-        public void Modificar(
-            int id,
-            string codigo,
-            string nombre,
-            string descripcion,
-            decimal precio,
-            string marca,
-            string categoria,
-            List<string> imagenes)
+        public void Modificar(int id, string codigo, string nombre,
+            string descripcion, decimal precio, string marca,
+            string categoria, List<string> imagenes)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -134,14 +116,13 @@ namespace TPWinForm_Equipo_3A.Negocio
                 datos.SetearConsulta(@"
                     UPDATE Articulos
                     SET
-                        Codigo = @codigo,
-                        Nombre = @nombre,
-                        Descripcion = @descripcion,
-                        IdMarca = (SELECT Id FROM Marcas WHERE Nombre=@marca),
-                        IdCategoria = (SELECT Id FROM Categorias WHERE Nombre=@categoria),
-                        Precio = @precio
-                    WHERE Id = @id
-                ");
+                        Codigo=@codigo,
+                        Nombre=@nombre,
+                        Descripcion=@descripcion,
+                        IdMarca=(SELECT Id FROM Marcas WHERE Nombre=@marca),
+                        IdCategoria=(SELECT Id FROM Categorias WHERE Nombre=@categoria),
+                        Precio=@precio
+                    WHERE Id=@id");
 
                 datos.SetearParametro("@codigo", codigo);
                 datos.SetearParametro("@nombre", nombre);
@@ -155,10 +136,7 @@ namespace TPWinForm_Equipo_3A.Negocio
                 datos.CerrarConexion();
 
                 AccesoDatos borrar = new AccesoDatos();
-
-                borrar.SetearConsulta(
-                    "DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
-
+                borrar.SetearConsulta("DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
                 borrar.SetearParametro("@id", id);
                 borrar.EjecutarAccion();
                 borrar.CerrarConexion();
@@ -169,16 +147,38 @@ namespace TPWinForm_Equipo_3A.Negocio
 
                     img.SetearConsulta(@"
                         INSERT INTO ImagenesArticulo
-                            (IdArticulo, UrlImagen)
-                        VALUES (@id, @url)
-                    ");
+                        (IdArticulo, UrlImagen)
+                        VALUES(@id,@url)");
 
                     img.SetearParametro("@id", id);
                     img.SetearParametro("@url", url);
-
                     img.EjecutarAccion();
                     img.CerrarConexion();
                 }
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                AccesoDatos borrarArticulo = new AccesoDatos();
+
+                borrarArticulo.SetearConsulta("DELETE FROM Articulos WHERE Id=@id");
+                borrarArticulo.SetearParametro("@id", id);
+                borrarArticulo.EjecutarAccion();
+                borrarArticulo.CerrarConexion();
             }
             finally
             {
