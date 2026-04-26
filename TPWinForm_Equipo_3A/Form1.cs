@@ -19,6 +19,7 @@ namespace TPWinForm_Equipo_3A
             btnAgregar.Click += btnAgregar_Click;
             btnModificar.Click += btnModificar_Click;
             btnEliminar.Click += btnEliminar_Click;
+            dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
 
             Cargar();
         }
@@ -63,18 +64,28 @@ namespace TPWinForm_Equipo_3A
             Articulo seleccionado =
                 (Articulo)dataGridView1.CurrentRow.DataBoundItem;
 
-            DialogResult respuesta = MessageBox.Show(
+            DialogResult r = MessageBox.Show(
                 "¿Eliminar artículo?",
                 "Eliminar",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
-            if (respuesta == DialogResult.Yes)
+            if (r == DialogResult.Yes)
             {
                 ArticuloNegocio negocio = new ArticuloNegocio();
                 negocio.Eliminar(seleccionado.Id);
                 Cargar();
             }
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null) return;
+
+            Articulo seleccionado =
+                (Articulo)dataGridView1.CurrentRow.DataBoundItem;
+
+            new FormDetalleArticulo(seleccionado).ShowDialog();
         }
 
         private void txtBuscar_TextChanged(object sender, EventArgs e)
