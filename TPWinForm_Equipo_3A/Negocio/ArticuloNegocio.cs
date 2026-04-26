@@ -13,7 +13,7 @@ namespace TPWinForm_Equipo_3A.Negocio
             try
             {
                 datos.SetearConsulta(@"
-                    SELECT 
+                    SELECT
                         A.Id,
                         A.Codigo,
                         A.Nombre,
@@ -37,7 +37,10 @@ namespace TPWinForm_Equipo_3A.Negocio
                     aux.Id = (int)datos.Lector["Id"];
                     aux.Codigo = (string)datos.Lector["Codigo"];
                     aux.Nombre = (string)datos.Lector["Nombre"];
-                    aux.Descripcion = datos.Lector["Descripcion"] is DBNull ? "" : (string)datos.Lector["Descripcion"];
+                    aux.Descripcion = datos.Lector["Descripcion"] is DBNull
+                        ? ""
+                        : (string)datos.Lector["Descripcion"];
+
                     aux.Marca.Nombre = (string)datos.Lector["Marca"];
                     aux.Categoria.Nombre = (string)datos.Lector["Categoria"];
                     aux.Precio = (decimal)datos.Lector["Precio"];
@@ -47,6 +50,65 @@ namespace TPWinForm_Equipo_3A.Negocio
                 }
 
                 return lista;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void Agregar(
+            string codigo,
+            string nombre,
+            string descripcion,
+            decimal precio,
+            string marca,
+            string categoria,
+            List<string> imagenes)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+                    INSERT INTO Articulos
+                        (Codigo, Nombre, Descripcion, IdMarca, IdCategoria, Precio)
+                    VALUES
+                        (
+                            @codigo,
+                            @nombre,
+                            @descripcion,
+                            (SELECT Id FROM Marcas WHERE Nombre = @marca),
+                            (SELECT Id FROM Categorias WHERE Nombre = @categoria),
+                            @precio
+                        )
+                ");
+
+                datos.SetearParametro("@codigo", codigo);
+                datos.SetearParametro("@nombre", nombre);
+                datos.SetearParametro("@descripcion", descripcion);
+                datos.SetearParametro("@marca", marca);
+                datos.SetearParametro("@categoria", categoria);
+                datos.SetearParametro("@precio", precio);
+
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                foreach (string url in imagenes)
+                {
+                    AccesoDatos img = new AccesoDatos();
+
+                    img.SetearConsulta(@"
+                        INSERT INTO ImagenesArticulo
+                            (IdArticulo, UrlImagen)
+                        VALUES
+                            ((SELECT MAX(Id) FROM Articulos), @url)
+                    ");
+
+                    img.SetearParametro("@url", url);
+                    img.EjecutarAccion();
+                    img.CerrarConexion();
+                }
             }
             finally
             {

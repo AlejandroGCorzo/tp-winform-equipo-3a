@@ -16,6 +16,7 @@ namespace TPWinForm_Equipo_3A
             InitializeComponent();
 
             txtBuscar.TextChanged += txtBuscar_TextChanged;
+            btnAgregar.Click += btnAgregar_Click;
 
             Cargar();
         }
@@ -34,6 +35,13 @@ namespace TPWinForm_Equipo_3A
 
             if (listaArticulos.Count > 0)
                 CargarImagen(listaArticulos[0].ImagenUrl);
+        }
+
+        private void btnAgregar_Click(object? sender, EventArgs e)
+        {
+            FormAltaArticulo ventana = new FormAltaArticulo();
+            ventana.ShowDialog();
+            Cargar();
         }
 
         private void txtBuscar_TextChanged(object? sender, EventArgs e)
@@ -71,7 +79,7 @@ namespace TPWinForm_Equipo_3A
             }
             catch
             {
-                pbxArticulo.Load("https://via.placeholder.com/240x240?text=Sin+Imagen");
+                pbxArticulo.Image = null;
             }
         }
 
