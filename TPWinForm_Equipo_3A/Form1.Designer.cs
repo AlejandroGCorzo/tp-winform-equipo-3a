@@ -2,14 +2,8 @@
 {
     partial class Form1
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up resources.
-        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -27,62 +21,53 @@
             btnAgregar = new Button();
             btnModificar = new Button();
             btnEliminar = new Button();
+            pbxArticulo = new PictureBox();
 
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pbxArticulo).BeginInit();
             SuspendLayout();
 
-            // txtBuscar
             txtBuscar.Location = new Point(12, 12);
-            txtBuscar.Name = "txtBuscar";
             txtBuscar.Size = new Size(280, 23);
-            txtBuscar.TabIndex = 0;
 
-            // btnAgregar
             btnAgregar.Location = new Point(310, 10);
-            btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(90, 27);
-            btnAgregar.TabIndex = 1;
             btnAgregar.Text = "Agregar";
-            btnAgregar.UseVisualStyleBackColor = true;
 
-            // btnModificar
             btnModificar.Location = new Point(410, 10);
-            btnModificar.Name = "btnModificar";
             btnModificar.Size = new Size(90, 27);
-            btnModificar.TabIndex = 2;
             btnModificar.Text = "Modificar";
-            btnModificar.UseVisualStyleBackColor = true;
 
-            // btnEliminar
             btnEliminar.Location = new Point(510, 10);
-            btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(90, 27);
-            btnEliminar.TabIndex = 3;
             btnEliminar.Text = "Eliminar";
-            btnEliminar.UseVisualStyleBackColor = true;
 
-            // dataGridView1
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(12, 50);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(960, 500);
-            dataGridView1.TabIndex = 4;
-            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.Size = new Size(700, 500);
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
 
-            // Form1
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            pbxArticulo.Location = new Point(730, 50);
+            pbxArticulo.Size = new Size(240, 240);
+            pbxArticulo.SizeMode = PictureBoxSizeMode.Zoom;
+            pbxArticulo.BorderStyle = BorderStyle.FixedSingle;
+
             ClientSize = new Size(984, 561);
+
+            Controls.Add(dataGridView1);
             Controls.Add(txtBuscar);
             Controls.Add(btnAgregar);
             Controls.Add(btnModificar);
             Controls.Add(btnEliminar);
-            Controls.Add(dataGridView1);
-            Name = "Form1";
+            Controls.Add(pbxArticulo);
+
             Text = "Gestión de Artículos";
 
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pbxArticulo).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -94,5 +79,6 @@
         private Button btnAgregar;
         private Button btnModificar;
         private Button btnEliminar;
+        private PictureBox pbxArticulo;
     }
 }
