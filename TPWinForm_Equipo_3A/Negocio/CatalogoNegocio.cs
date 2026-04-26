@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TPWinForm_Equipo_3A.Dominio;
 
 namespace TPWinForm_Equipo_3A.Negocio
@@ -25,10 +26,7 @@ namespace TPWinForm_Equipo_3A.Negocio
 
                 return lista;
             }
-            finally
-            {
-                datos.CerrarConexion();
-            }
+            finally { datos.CerrarConexion(); }
         }
 
         public List<Categoria> ListarCategorias()
@@ -51,10 +49,7 @@ namespace TPWinForm_Equipo_3A.Negocio
 
                 return lista;
             }
-            finally
-            {
-                datos.CerrarConexion();
-            }
+            finally { datos.CerrarConexion(); }
         }
 
         public void AgregarMarca(string nombre)
@@ -67,10 +62,7 @@ namespace TPWinForm_Equipo_3A.Negocio
                 datos.SetearParametro("@nombre", nombre);
                 datos.EjecutarAccion();
             }
-            finally
-            {
-                datos.CerrarConexion();
-            }
+            finally { datos.CerrarConexion(); }
         }
 
         public void AgregarCategoria(string nombre)
@@ -83,10 +75,33 @@ namespace TPWinForm_Equipo_3A.Negocio
                 datos.SetearParametro("@nombre", nombre);
                 datos.EjecutarAccion();
             }
-            finally
+            finally { datos.CerrarConexion(); }
+        }
+
+        public void EliminarMarca(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
             {
-                datos.CerrarConexion();
+                datos.SetearConsulta("DELETE FROM Marcas WHERE Id=@id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
             }
+            finally { datos.CerrarConexion(); }
+        }
+
+        public void EliminarCategoria(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("DELETE FROM Categorias WHERE Id=@id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            finally { datos.CerrarConexion(); }
         }
     }
 }
