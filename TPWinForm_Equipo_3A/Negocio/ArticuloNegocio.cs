@@ -22,11 +22,19 @@ namespace TPWinForm_Equipo_3A.Negocio
                         M.Nombre AS Marca,
                         C.Nombre AS Categoria,
                         A.Precio,
-                        ISNULL(I.UrlImagen, '') AS ImagenUrl
+                        ISNULL(
+                            (
+                                SELECT TOP 1 UrlImagen
+                                FROM ImagenesArticulo
+                                WHERE IdArticulo = A.Id
+                                ORDER BY Id
+                            ),
+                            ''
+                        ) AS ImagenUrl
                     FROM Articulos A
                     INNER JOIN Marcas M ON A.IdMarca = M.Id
                     INNER JOIN Categorias C ON A.IdCategoria = C.Id
-                    LEFT JOIN ImagenesArticulo I ON I.IdArticulo = A.Id
+                    ORDER BY A.Id
                 ");
 
                 datos.EjecutarLectura();
@@ -55,8 +63,14 @@ namespace TPWinForm_Equipo_3A.Negocio
             }
         }
 
-        public void Agregar(string codigo, string nombre, string descripcion,
-            decimal precio, string marca, string categoria, List<string> imagenes)
+        public void Agregar(
+            string codigo,
+            string nombre,
+            string descripcion,
+            decimal precio,
+            string marca,
+            string categoria,
+            List<string> imagenes)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -105,9 +119,15 @@ namespace TPWinForm_Equipo_3A.Negocio
             }
         }
 
-        public void Modificar(int id, string codigo, string nombre,
-            string descripcion, decimal precio, string marca,
-            string categoria, List<string> imagenes)
+        public void Modificar(
+            int id,
+            string codigo,
+            string nombre,
+            string descripcion,
+            decimal precio,
+            string marca,
+            string categoria,
+            List<string> imagenes)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -136,7 +156,10 @@ namespace TPWinForm_Equipo_3A.Negocio
                 datos.CerrarConexion();
 
                 AccesoDatos borrar = new AccesoDatos();
-                borrar.SetearConsulta("DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
+
+                borrar.SetearConsulta(
+                    "DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
+
                 borrar.SetearParametro("@id", id);
                 borrar.EjecutarAccion();
                 borrar.CerrarConexion();
@@ -168,14 +191,18 @@ namespace TPWinForm_Equipo_3A.Negocio
 
             try
             {
-                datos.SetearConsulta("DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
+                datos.SetearConsulta(
+                    "DELETE FROM ImagenesArticulo WHERE IdArticulo=@id");
+
                 datos.SetearParametro("@id", id);
                 datos.EjecutarAccion();
                 datos.CerrarConexion();
 
                 AccesoDatos borrarArticulo = new AccesoDatos();
 
-                borrarArticulo.SetearConsulta("DELETE FROM Articulos WHERE Id=@id");
+                borrarArticulo.SetearConsulta(
+                    "DELETE FROM Articulos WHERE Id=@id");
+
                 borrarArticulo.SetearParametro("@id", id);
                 borrarArticulo.EjecutarAccion();
                 borrarArticulo.CerrarConexion();
@@ -194,9 +221,10 @@ namespace TPWinForm_Equipo_3A.Negocio
             try
             {
                 datos.SetearConsulta(@"
-            SELECT UrlImagen
-            FROM ImagenesArticulo
-            WHERE IdArticulo = @id");
+                    SELECT UrlImagen
+                    FROM ImagenesArticulo
+                    WHERE IdArticulo = @id
+                    ORDER BY Id");
 
                 datos.SetearParametro("@id", idArticulo);
                 datos.EjecutarLectura();

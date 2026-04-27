@@ -29,17 +29,16 @@ namespace TPWinForm_Equipo_3A
             txtNombre.Text = articulo.Nombre;
             txtDescripcion.Text = articulo.Descripcion;
             txtPrecio.Text = articulo.Precio.ToString();
-            txtImagen.Text = articulo.ImagenUrl;
 
             cboMarca.Text = articulo.Marca.Nombre;
             cboCategoria.Text = articulo.Categoria.Nombre;
 
-            if (!string.IsNullOrEmpty(articulo.ImagenUrl))
-            {
-                imagenes.Add(articulo.ImagenUrl);
-                lstImagenes.DataSource = null;
-                lstImagenes.DataSource = imagenes;
-            }
+            ArticuloNegocio negocio = new ArticuloNegocio();
+
+            imagenes = negocio.ListarImagenes(articulo.Id);
+
+            lstImagenes.DataSource = null;
+            lstImagenes.DataSource = imagenes;
         }
 
         private void CargarCombos()
@@ -53,7 +52,7 @@ namespace TPWinForm_Equipo_3A
             cboCategoria.DataSource = negocio.ListarCategorias();
         }
 
-        private void btnAgregarImagen_Click(object? sender, EventArgs e)
+        private void btnAgregarImagen_Click(object sender, EventArgs e)
         {
             if (txtImagen.Text.Trim() == "") return;
 
@@ -65,7 +64,7 @@ namespace TPWinForm_Equipo_3A
             txtImagen.Clear();
         }
 
-        private void btnQuitarImagen_Click(object? sender, EventArgs e)
+        private void btnQuitarImagen_Click(object sender, EventArgs e)
         {
             if (lstImagenes.SelectedItem == null) return;
 
@@ -75,7 +74,7 @@ namespace TPWinForm_Equipo_3A
             lstImagenes.DataSource = imagenes;
         }
 
-        private void btnAceptar_Click(object? sender, EventArgs e)
+        private void btnAceptar_Click(object sender, EventArgs e)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
 
@@ -108,7 +107,7 @@ namespace TPWinForm_Equipo_3A
             Close();
         }
 
-        private void btnCancelar_Click(object? sender, EventArgs e)
+        private void btnCancelar_Click(object sender, EventArgs e)
         {
             Close();
         }
