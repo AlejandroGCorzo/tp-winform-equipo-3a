@@ -10,6 +10,7 @@
         private Button btnModificar;
         private Button btnEliminar;
         private Button btnCatalogos;
+        private Button btnActualizar;
         private PictureBox pbxArticulo;
 
         protected override void Dispose(bool disposing)
@@ -28,6 +29,7 @@
             btnModificar = new Button();
             btnEliminar = new Button();
             btnCatalogos = new Button();
+            btnActualizar = new Button();
             pbxArticulo = new PictureBox();
 
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -53,6 +55,10 @@
             btnCatalogos.Size = new Size(110, 27);
             btnCatalogos.Text = "Catálogos";
 
+            btnActualizar.Location = new Point(710, 10);
+            btnActualizar.Size = new Size(100, 27);
+            btnActualizar.Text = "Actualizar";
+
             dataGridView1.Location = new Point(12, 50);
             dataGridView1.Size = new Size(700, 500);
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -73,6 +79,7 @@
             Controls.Add(btnModificar);
             Controls.Add(btnEliminar);
             Controls.Add(btnCatalogos);
+            Controls.Add(btnActualizar);
             Controls.Add(pbxArticulo);
 
             Text = "Gestión de Artículos";

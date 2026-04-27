@@ -20,9 +20,15 @@ namespace TPWinForm_Equipo_3A
             btnModificar.Click += btnModificar_Click;
             btnEliminar.Click += btnEliminar_Click;
             btnCatalogos.Click += btnCatalogos_Click;
+            btnActualizar.Click += btnActualizar_Click;
 
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
 
+            Cargar();
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
             Cargar();
         }
 
@@ -45,6 +51,8 @@ namespace TPWinForm_Equipo_3A
 
             if (listaArticulos.Count > 0)
                 CargarImagen(listaArticulos[0].ImagenUrl);
+            else
+                pbxArticulo.Image = null;
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
